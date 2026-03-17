@@ -1,0 +1,13 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - CSV_PATH=/app/data/movielist.csv
+    volumes:
+      - ./src/main/resources/movielist.csv:/app/data/movielist.csv
+    restart: unless-stopped

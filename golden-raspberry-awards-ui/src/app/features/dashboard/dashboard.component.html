@@ -1,0 +1,131 @@
+<div class="dashboard-grid">
+  <!-- Painel 1: List years with multiple winners -->
+  <div class="card">
+    <div class="card-header">List years with multiple winners</div>
+    <div class="card-body">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Win Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of yearsWithMultipleWinners(); track item.year) {
+            <tr>
+              <td>{{ item.year }}</td>
+              <td>{{ item.winnerCount }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Painel 2: Top 3 studios with winners -->
+  <div class="card">
+    <div class="card-header">Top 3 studios with winners</div>
+    <div class="card-body">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Win Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (studio of topStudios(); track studio.name) {
+            <tr>
+              <td>{{ studio.name }}</td>
+              <td>{{ studio.winCount }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Painel 3: Producers with longest/shortest interval -->
+  <div class="card">
+    <div class="card-header">Producers with longest and shortest interval between wins</div>
+    <div class="card-body">
+      <p class="sub-title">Maximum</p>
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Producer</th>
+            <th>Interval</th>
+            <th>Previous Year</th>
+            <th>Following Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of maxIntervals(); track p.producer + '-' + p.previousWin) {
+            <tr>
+              <td>{{ p.producer }}</td>
+              <td>{{ p.interval }}</td>
+              <td>{{ p.previousWin }}</td>
+              <td>{{ p.followingWin }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      
+      <p class="sub-title">Minimum</p>
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Producer</th>
+            <th>Interval</th>
+            <th>Previous Year</th>
+            <th>Following Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of minIntervals(); track p.producer + '-' + p.previousWin) {
+            <tr>
+              <td>{{ p.producer }}</td>
+              <td>{{ p.interval }}</td>
+              <td>{{ p.previousWin }}</td>
+              <td>{{ p.followingWin }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Painel 4: List movie winners by year -->
+  <div class="card">
+    <div class="card-header">List movie winners by year</div>
+    <div class="card-body">
+      <div class="search-box">
+        <input 
+          type="number" 
+          placeholder="Search by year" 
+          [(ngModel)]="searchYear"
+          (keyup.enter)="onYearSearch()"
+        >
+        <button class="btn-search" (click)="onYearSearch()">🔍</button>
+      </div>
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Year</th>
+            <th>Title</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (movie of yearWinners(); track movie.id) {
+            <tr>
+              <td>{{ movie.id }}</td>
+              <td>{{ movie.year }}</td>
+              <td>{{ movie.title }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

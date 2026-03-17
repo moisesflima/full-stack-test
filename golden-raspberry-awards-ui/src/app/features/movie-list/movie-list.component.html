@@ -1,0 +1,67 @@
+<div class="card">
+  <div class="card-header">List movies</div>
+  <div class="card-body">
+    <table class="custom-table">
+      <thead>
+        <!-- Linha 1: Títulos -->
+        <tr>
+          <th>ID</th>
+          <th>Year</th>
+          <th>Title</th>
+          <th>Winner?</th>
+        </tr>
+        <!-- Linha 2: Filtros conforme solicitado -->
+        <tr class="filter-row">
+          <th></th>
+          <th>
+            <input 
+              type="number" 
+              placeholder="Filter by year" 
+              [(ngModel)]="filterYear"
+              (input)="onFilterChange()"
+            >
+          </th>
+          <th></th>
+          <th>
+            <select [(ngModel)]="filterWinner" (change)="onFilterChange()">
+              <option [ngValue]="undefined">Yes/No</option>
+              <option [ngValue]="true">Yes</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (movie of movies(); track movie.id) {
+          <tr>
+            <td>{{ movie.id }}</td>
+            <td>{{ movie.year }}</td>
+            <td>{{ movie.title }}</td>
+            <td>{{ movie.winner ? 'Yes' : 'No' }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" style="text-align: center; color: var(--text-muted)">No movies found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <!-- Paginação customizada -->
+    <div class="pagination">
+      <button class="page-btn" [disabled]="currentPage() === 0" (click)="setPage(0)">«</button>
+      <button class="page-btn" [disabled]="currentPage() === 0" (click)="setPage(currentPage() - 1)">‹</button>
+
+      @for (p of pagesArray(); track p) {
+        <button 
+          class="page-btn" 
+          [class.active]="p === currentPage()"
+          (click)="setPage(p)"
+        >{{ p + 1 }}</button>
+      }
+
+      <button class="page-btn" [disabled]="currentPage() === totalPages() - 1" (click)="setPage(currentPage() + 1)">›</button>
+      <button class="page-btn" [disabled]="currentPage() === totalPages() - 1" (click)="setPage(totalPages() - 1)">»</button>
+    </div>
+  </div>
+</div>
