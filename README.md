@@ -8,8 +8,8 @@ O projeto está estruturado como um **monorepo**, facilitando a gestão do ecoss
 
 ## Estrutura do Repositório
 
-* **golden-raspberry-awards-api/**: Backend desenvolvido em Java 21 e Spring Boot 3.2.5.
-* **golden-raspberry-awards-ui/**: Frontend desenvolvido em Angular 19 com foco em performance.
+* **golden-raspberry-awards-api/**: Backend desenvolvido em Java 21 e Spring Boot 3.5.9.
+* **golden-raspberry-awards-ui/**: Frontend desenvolvido em Angular 19.
 
 ---
 
@@ -17,25 +17,39 @@ O projeto está estruturado como um **monorepo**, facilitando a gestão do ecoss
 
 O objetivo principal é processar um arquivo CSV de filmes e identificar os produtores com o maior e o menor intervalo entre dois prêmios consecutivos, conforme os requisitos do desafio.
 
-### Tecnologias
-* **Java 21** e **Spring Boot 3.2.5**.
-* **H2 Database**: Banco de dados em memória para agilidade no desafio.
-* **Spring Data JPA** e **SpringDoc OpenAPI (Swagger)**.
-
 ### Principais Endpoints
 * **GET** `/api/movies/maxMinWinIntervalForProducers`: Retorna os intervalos de vitórias dos produtores.
 
-### Execução Local (Maven)
+### Execução via Maven
 ```bash
 cd golden-raspberry-awards-api
 mvn spring-boot:run
 ```
 
+### Execução via Docker
+```bash
+cd golden-raspberry-awards-api
+docker-compose up --build -d
+```
+
+### Endpoints
+- **Backend (API)**: http://localhost:8080/api/movies
+- **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **API Docs (JSON)**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+### Manipulação de Dados na API (CSV)
+
+A aplicação está configurada para carregar os dados automaticamente a partir de um arquivo externo. Para testar com novos cenários:
+
+1. Edite o conteúdo doarquivo `./golden-raspberry-awards-api/src/main/resources/movielist.csv`.
+2. Reinicie o container: `docker-compose restart api`.
+3. A base de dados H2 será populada automaticamente no startup.
+
 ---
 
 ## Frontend: Golden Raspberry Awards UI
 
-Interface moderna para visualização das estatísticas e listagem detalhada dos indicados e vencedores.
+Interface para visualização das estatísticas e listagem detalhada dos indicados e vencedores.
 
 ### Tecnologias e Decisões Técnicas
 * **Angular 19**: Utilização de **Standalone Components** e nova sintaxe de controle de fluxo (`@if`, `@for`).
@@ -49,6 +63,17 @@ npm install
 npm start
 ```
 
+### Execução via Docker
+```bash
+cd golden-raspberry-awards-ui
+docker-compose up --build -d
+```
+
+### Endpoints
+- http://localhost:4200/dashboard
+- http://localhost:4200/movies
+
+
 ---
 
 ## Testes e Qualidade
@@ -59,13 +84,3 @@ Ambos os projetos possuem suítes de testes automatizados para garantir a confia
 | :--- | :--- | :--- |
 | **Backend** | Testes de Integração (JUnit/Spring) | `mvn test` |
 | **Frontend** | Vitest | `npm test` |
-
----
-
-## Manipulação de Dados na API(CSV)
-
-A aplicação está configurada para carregar os dados automaticamente a partir de um arquivo externo. Para testar com novos cenários:
-
-1. Edite o arquivo `./golden-raspberry-awards-api/src/main/resources/movielist.csv`.
-2. Reinicie o container Docker: Reinicie o container: `docker-compose restart api`.
-3. A base de dados H2 será populada automaticamente no startup.

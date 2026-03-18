@@ -1,0 +1,9 @@
+services:
+  ui:
+    image: golden-raspberry-awards-ui:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    restart: unless-stopped

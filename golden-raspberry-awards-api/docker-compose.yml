@@ -1,5 +1,6 @@
 services:
   api:
+    image: golden-raspberry-awards-api:latest
     build:
       context: .
       dockerfile: Dockerfile
