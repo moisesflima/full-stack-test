@@ -6,11 +6,6 @@ import com.moisesflima.goldenraspberry.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-/**
- * Service implementation for processing award intervals.
- */
 @Service
 public class AwardIntervalServiceImpl implements AwardIntervalService {
 
@@ -18,9 +13,9 @@ public class AwardIntervalServiceImpl implements AwardIntervalService {
     private final IntervalCalculator intervalCalculator;
     private final AwardIntervalAnalyst analyst;
 
-    public AwardIntervalServiceImpl(MovieRepository movieRepository, 
-                                   IntervalCalculator intervalCalculator, 
-                                   AwardIntervalAnalyst analyst) {
+    public AwardIntervalServiceImpl(MovieRepository movieRepository,
+                                    IntervalCalculator intervalCalculator,
+                                    AwardIntervalAnalyst analyst) {
         this.movieRepository = movieRepository;
         this.intervalCalculator = intervalCalculator;
         this.analyst = analyst;
@@ -31,11 +26,7 @@ public class AwardIntervalServiceImpl implements AwardIntervalService {
     public MaxMinWinIntervalForProducersResponse getAwardIntervals() {
         try {
             var winningMovies = movieRepository.findAllWinnersOrderedByProducerAndYear();
-            
-            List<MaxMinWinIntervalForProducersResponse.ProducerIntervalDto> allIntervals = 
-                    intervalCalculator.calculateAllIntervals(winningMovies);
-                    
-            return analyst.analyze(allIntervals);
+            return intervalCalculator.calculateAndAnalyze(winningMovies, analyst.newBuilder());
         } catch (Exception e) {
             throw new MovieBusinessException("Error processing award intervals: " + e.getMessage());
         }

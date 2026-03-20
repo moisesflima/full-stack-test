@@ -1,14 +1,14 @@
 package com.moisesflima.goldenraspberry.service;
 
+import com.moisesflima.goldenraspberry.dto.MaxMinWinIntervalForProducersResponse;
 import com.moisesflima.goldenraspberry.dto.MaxMinWinIntervalForProducersResponse.ProducerIntervalDto;
 import com.moisesflima.goldenraspberry.entity.Movie;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- * Calculates win intervals for producers from a provided movie list.
- */
 @Component
 public class IntervalCalculator {
 
@@ -18,35 +18,22 @@ public class IntervalCalculator {
         this.producerParser = producerParser;
     }
 
-    /**
-     * Groups wins by producer and calculates all consecutive intervals.
-     */
-    public List<ProducerIntervalDto> calculateAllIntervals(List<Movie> winners) {
-        Map<String, List<Integer>> producerWins = new LinkedHashMap<>();
+    public MaxMinWinIntervalForProducersResponse calculateAndAnalyze(
+            List<Movie> winners,
+            AwardIntervalAnalyst.Builder builder) {
 
-        // Group years by producer
+        Map<String, Integer> lastYearByProducer = new HashMap<>();
+
         for (Movie movie : winners) {
-            List<String> producers = producerParser.parse(movie.getProducers());
-            for (String producer : producers) {
-                producerWins.computeIfAbsent(producer, k -> new ArrayList<>()).add(movie.getYear());
+            int year = movie.getYear();
+            for (String producer : producerParser.parse(movie.getProducers())) {
+                Integer lastYear = lastYearByProducer.put(producer, year);
+                if (lastYear != null && lastYear < year) {
+                    builder.accept(new ProducerIntervalDto(producer, year - lastYear, lastYear, year));
+                }
             }
         }
 
-        List<ProducerIntervalDto> allIntervals = new ArrayList<>();
-
-        // Calculate intervals for each producer with at least 2 wins
-        for (Map.Entry<String, List<Integer>> entry : producerWins.entrySet()) {
-            String producer = entry.getKey();
-            List<Integer> years = entry.getValue();
-            Collections.sort(years);
-
-            for (int i = 1; i < years.size(); i++) {
-                int prev = years.get(i - 1);
-                int next = years.get(i);
-                allIntervals.add(new ProducerIntervalDto(producer, next - prev, prev, next));
-            }
-        }
-
-        return allIntervals;
+        return builder.build();
     }
 }

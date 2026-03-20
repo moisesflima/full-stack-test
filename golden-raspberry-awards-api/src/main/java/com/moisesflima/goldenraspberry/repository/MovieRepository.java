@@ -10,10 +10,6 @@ import java.util.List;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
-    /**
-     * Returns all winning movies ordered by producers and year,
-     * so we can compute consecutive win intervals.
-     */
-    @Query("SELECT m FROM Movie m WHERE m.winner = true ORDER BY m.producers ASC, m.year ASC")
+    @Query("SELECT m FROM Movie m WHERE m.winner = true ORDER BY m.year ASC")
     List<Movie> findAllWinnersOrderedByProducerAndYear();
 }
